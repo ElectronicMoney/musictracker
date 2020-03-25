@@ -1,18 +1,29 @@
 from graphene_django import DjangoObjectType
 import graphene
 from .models import Track
+from .models import Like
 from Users.schema import UserType
 
+# TrackType
 class TrackType(DjangoObjectType):
     class Meta:
         model = Track
 
+# LikeType
+class LikeType(DjangoObjectType):
+    class Meta:
+        model = Like
+
 # Get Track
 class Query(graphene.ObjectType):
     tracks = graphene.List(TrackType)
+    likes = graphene.List(LikeType)
 
     def resolve_tracks(self, info):
         return Track.objects.all()
+    
+    def resolve_like(self, info):
+        return Like.objects.all()
 
 # Create Track
 class CreateTrack(graphene.Mutation):
@@ -108,6 +119,7 @@ class CreateLike(graphene.Mutation):
         track.save()
         # return the created track
         return CreateLike(user=user, track=track)
+
 
 class Mutation(graphene.ObjectType):
     create_track = CreateTrack.Field()
