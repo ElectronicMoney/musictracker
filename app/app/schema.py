@@ -6,4 +6,7 @@ import Tracks.schema
 class Query(Tracks.schema.Query, graphene.ObjectType):
    pass
 
-schema = graphene.Schema(query=Query)
+class Mutation(Tracks.schema.Mutation, graphene.ObjectType):
+    pass
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
