@@ -17,10 +17,13 @@ class LikeType(DjangoObjectType):
 
 # Get Track
 class Query(graphene.ObjectType):
-    tracks = graphene.List(TrackType)
+    tracks = graphene.List(TrackType, search=graphene.String())
     likes = graphene.List(LikeType)
 
-    def resolve_tracks(self, info):
+    def resolve_tracks(self, info, search=None):
+        # Check if some search text is provide
+        if search:
+            return Track.objects.filter(title__icontains=search)
         return Track.objects.all()
     
     def resolve_like(self, info):
