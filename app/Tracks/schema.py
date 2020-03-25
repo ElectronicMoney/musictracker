@@ -3,6 +3,7 @@ import graphene
 from .models import Track
 from .models import Like
 from Users.schema import UserType
+from graphql import GraphQLError
 
 # TrackType
 class TrackType(DjangoObjectType):
@@ -41,7 +42,7 @@ class CreateTrack(graphene.Mutation):
 
         user = info.context.user
         if user.is_anonymous:
-            raise Exception('You are not Logged In!')
+            raise GraphQLError('You are not Logged In!')
         return user
 
         # Create Track
@@ -65,7 +66,7 @@ class UpdateTrack(graphene.Mutation):
         track = Track.objects.get(id = kwargs.get('track_id'))
         # If user from context is ot equal to posted_by
         if info.context.user != track.posted_by:
-            raise Exception('Not permited to update this track!')
+            raise GraphQLError('Not permited to update this track!')
 
         title       = kwargs.get('title')
         description = kwargs.get('description')
@@ -88,7 +89,7 @@ class DeleteTrack(graphene.Mutation):
         track = Track.objects.get(id = kwargs.get('track_id'))
         # If user from context is ot equal to posted_by
         if info.context.user != track.posted_by:
-            raise Exception('Not permited to delete this track!')
+            raise GraphQLError('Not permited to delete this track!')
 
         # Save track
         track.delete()
@@ -109,12 +110,12 @@ class CreateLike(graphene.Mutation):
         user = info.context.user
 
         if user.is_anonymous:
-            raise Exception('You must Login to Like Tracks!')
+            raise GraphQLError('You must Login to Like Tracks!')
         # Create Track
         track = Track.objects.get(id=kwargs.get('track_id'))
         # Check if not track with such id
         if not track:
-            raise Exception("Cannot find any track with given id!")
+            raise GraphQLError("Cannot find any track with given id!")
 
         track.save()
         # return the created track
