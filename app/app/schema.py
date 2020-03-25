@@ -5,6 +5,7 @@ import Users.schema
 
 # Queries
 class Query(
+    Users.schema.Query, 
     Tracks.schema.Query, 
     graphene.ObjectType
 ):
