@@ -18,8 +18,6 @@ class Track(models.Model):
 class Like(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     track = models.ForeignKey(Track, related_name="likes", on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    like_at = models.DateTimeField(auto_now_add=True)
 
 
     def __str__(self):
